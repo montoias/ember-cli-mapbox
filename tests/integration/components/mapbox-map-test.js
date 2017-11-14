@@ -1,15 +1,13 @@
+/* global L */
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-
 import mockMap from 'dummy/tests/helpers/mock-map';
 
 moduleForComponent('mapbox-map', 'Integration | Component | mapbox map', {
   integration: true,
 
   beforeEach() {
-    L.mapbox.map = function() {
-      return mockMap;
-    };
+    L.mapbox.map = () => mockMap;
   }
 });
 
@@ -44,10 +42,6 @@ test('it calls setView if a center is defined', function(assert) {
     assert.equal(center, 'baba');
   };
 
-  L.mapbox.map = function() {
-    return mockMap;
-  };
-
   this.render(hbs`{{mapbox-map center='baba'}}`);
 });
 
@@ -57,10 +51,6 @@ test('it calls setView with zoom if it is defined', function(assert) {
   mockMap.setView = function(center, zoom) {
     assert.equal(center, 'baba');
     assert.equal(zoom, 'gaga');
-  };
-
-  L.mapbox.map = function() {
-    return mockMap;
   };
 
   this.render(hbs`{{mapbox-map center='baba' zoom='gaga'}}`);
@@ -79,10 +69,6 @@ test('it registers an event for click (deprecated)', function(assert) {
     }
   };
 
-  L.mapbox.map = function() {
-    return mockMap;
-  };
-
   this.render(hbs`{{mapbox-map click='explode'}}`);
 });
 
@@ -99,10 +85,6 @@ test('it registers an event for onclick', function(assert) {
     }
   };
 
-  L.mapbox.map = function() {
-    return mockMap;
-  };
-
   this.render(hbs`{{mapbox-map onclick='explode'}}`);
 });
 
@@ -117,10 +99,6 @@ test('it registers an event for onlocationerror', function(assert) {
     if (e === 'locationerror') {
       method();
     }
-  };
-
-  L.mapbox.map = function() {
-    return mockMap;
   };
 
   this.render(hbs`{{mapbox-map onlocationerror='explode'}}`);

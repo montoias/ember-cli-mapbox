@@ -1,20 +1,20 @@
-/* jshint node: true */
+/* eslint-env node */
 
 module.exports = function(environment) {
   var ENV = {
     modulePrefix: 'dummy',
     environment: environment,
-    baseURL: '/',
+    rootURL: '/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
         // Here you can enable experimental features on an ember canary build
         // e.g. 'with-controller': true
+      },
+      EXTEND_PROTOTYPES: {
+        // Prevent Ember Data from overriding Date.parse.
+        Date: false
       }
-    },
-
-    mapbox: {
-      accessToken: 'pk.eyJ1IjoiZW1iZXItY2xpLW1hcGJveCIsImEiOiIxMGZiNjA5NWJlNWY2OWRmMWQ3OGExNTkwMzM5NDRiMCJ9.0Vt2Lduj_gUQ0nnSBWIUkA'
     },
 
     APP: {
@@ -33,7 +33,6 @@ module.exports = function(environment) {
 
   if (environment === 'test') {
     // Testem prefers this...
-    ENV.baseURL = '/';
     ENV.locationType = 'none';
 
     // keep test console output quieter
@@ -43,8 +42,8 @@ module.exports = function(environment) {
     ENV.APP.rootElement = '#ember-testing';
   }
 
-  if (environment === 'production') {
-
+  ENV.mapbox = {
+    accessToken: 'pk.eyJ1IjoiZW1iZXItY2xpLW1hcGJveCIsImEiOiIxMGZiNjA5NWJlNWY2OWRmMWQ3OGExNTkwMzM5NDRiMCJ9.0Vt2Lduj_gUQ0nnSBWIUkA'
   }
 
   return ENV;

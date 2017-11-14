@@ -1,3 +1,4 @@
+/* global L */
 import Ember from 'ember';
 import layout from '../templates/components/mapbox-geojson';
 
@@ -7,14 +8,14 @@ export default Component.extend({
   classNameBindings: ['isLoaded'],
   layout: layout,
   geoJson: null,
-  
+
   json: {},
   fitBounds: false,
   customStyle({ className, color }) {
     let options = {};
-    
+
     if (className) {
-      options = {...options, className};
+      options = { ...options, className };
     }
 
     if (color) {
@@ -25,8 +26,8 @@ export default Component.extend({
   },
 
   isLoaded: computed('map', 'json', function() {
-    let { map, json, geoJson } = this.getProperties('map', 'json', 'geoJson');
-    
+    let { map, geoJson } = this.getProperties('map', 'geoJson');
+
     if (isEmpty(map)) {
       return false;
     }
@@ -47,7 +48,7 @@ export default Component.extend({
 
   willDestroyElement() {
     let { map, geoJson } = this.getProperties('map', 'geoJson');
-    
+
     if (!isEmpty(map) && !isEmpty(geoJson)) {
       this._removeLayer(map, geoJson);
     }
@@ -65,7 +66,7 @@ export default Component.extend({
 
   _addLayer(map, geoJson) {
     geoJson.addTo(map);
-  
+
     if (this.get('fitBounds')) {
       map.fitBounds(geoJson.getBounds());
     }

@@ -3,7 +3,7 @@ import layout from '../templates/components/mapbox-layer';
 
 export default Ember.Component.extend({
   layout,
-  
+
   id: null,
   map: null,
   layer: {},

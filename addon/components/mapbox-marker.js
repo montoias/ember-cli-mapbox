@@ -1,8 +1,9 @@
+/* global L */
 import Ember from 'ember';
 import layout from '../templates/components/mapbox-marker';
 import { MARKER_EVENTS } from '../constants/events';
 
-const { on, computed, isEmpty, observer } = Ember;
+const { on, computed, isEmpty, observer, isPresent } = Ember;
 
 export default Ember.Component.extend({
   classNameBindings: ['isLoaded'],
@@ -12,6 +13,7 @@ export default Ember.Component.extend({
   marker: null,
   draggable: false,
   hasEvents: true,
+  isOpen: true,
 
   createMarkerIcon() {
     return L.mapbox.marker.icon({
@@ -45,15 +47,17 @@ export default Ember.Component.extend({
     }
   }),
 
-  setup: on('init', function() {
+  setup: on('didInsertElement', function() {
     let marker = L.marker(this.get('coordinates'), {
       icon: this.get('createMarkerIcon')(),
       draggable: this.get('draggable')
     });
 
-    if (this.get('hasEvents')) {
-      marker.bindPopup(this.get('popup-title'));
+    if (isPresent(this.get('popupTitle'))) {
+      marker.bindPopup(this.get('popupTitle'));
+    }
 
+    if (this.get('hasEvents')) {
       MARKER_EVENTS.forEach((event) => {
         marker.on(event, (e) => this.sendAction('on' + event, marker, e));
       });
@@ -64,18 +68,18 @@ export default Ember.Component.extend({
 
   teardown: on('willDestroyElement', function() {
     let { map, marker } = this.getProperties('map', 'marker');
-    
+
     if (map && marker) {
       map.removeLayer(marker);
     }
   }),
 
   popup: on('didRender', function() {
-    if (!this.get('is-open')) {
+    if (!this.get('isOpen')) {
       return;
     }
 
-    if (this.get('hasEvents')) {
+    if (isPresent(this.get('popupTitle'))) {
       this.get('marker').openPopup();
     }
 

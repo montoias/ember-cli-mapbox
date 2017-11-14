@@ -1,3 +1,4 @@
+/* global L */
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
@@ -7,13 +8,8 @@ moduleForComponent('mapbox-marker', 'Integration | Component | mapbox marker', {
   integration: true,
 
   beforeEach() {
-    L.marker = function() {
-      return mockMarker;
-    };
-
-    L.mapbox.marker.icon = function() {
-
-    };
+    L.marker = () => { return mockMarker };
+    L.mapbox.marker.icon = () => {};
   }
 });
 
@@ -42,10 +38,6 @@ test('it registers an event for onclick', function(assert) {
     }
   };
 
-  L.marker = function() {
-    return mockMarker;
-  };
-
   this.render(hbs`{{mapbox-marker onclick='explode'}}`);
 });
 
@@ -62,10 +54,6 @@ test('it registers an event for onpopupopen', function(assert) {
     }
   };
 
-  L.marker = function() {
-    return mockMarker;
-  };
-
   this.render(hbs`{{mapbox-marker onpopupopen='explode'}}`);
 });
 
@@ -80,10 +68,6 @@ test('it registers an event for onremove', function(assert) {
     if (e === 'remove') {
       method();
     }
-  };
-
-  L.marker = function() {
-    return mockMarker;
   };
 
   this.render(hbs`{{mapbox-marker onremove='explode'}}`);
