@@ -1,7 +1,10 @@
-import Ember from 'ember';
+import { on } from '@ember/object/evented';
+import { isEmpty } from '@ember/utils';
+import { computed } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/mapbox-markercluster';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ['isLoaded'],
   layout: layout,
   cluster: null,
@@ -16,10 +19,10 @@ export default Ember.Component.extend({
   spiderfyDistanceMultiplier: 1,
   maxClusterRadius: 80,
 
-  isLoaded: Ember.computed('map', 'cluster', function() {
+  isLoaded: computed('map', 'cluster', function() {
     let map = this.get('map');
     let cluster = this.get('cluster');
-    if (!Ember.isEmpty(map) && !Ember.isEmpty(cluster)) {
+    if (!isEmpty(map) && !isEmpty(cluster)) {
       map.addLayer(cluster);
       return true;
     } else {
@@ -27,7 +30,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  setup: Ember.on('init', function() {
+  setup: on('init', function() {
     let cluster = new L.MarkerClusterGroup({
       animate:                    this.get('animate'),
       showCoverageOnHover:        this.get('showCoverageOnHover'),
@@ -46,7 +49,7 @@ export default Ember.Component.extend({
     this.set('cluster', cluster);
   }),
 
-  teardown: Ember.on('willDestroyElement', function() {
+  teardown: on('willDestroyElement', function() {
     let cluster = this.get('cluster');
     let map = this.get('map');
     if (map && cluster) {

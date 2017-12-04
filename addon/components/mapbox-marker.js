@@ -1,8 +1,11 @@
-import Ember from 'ember';
+import { on } from '@ember/object/evented';
+import { isEmpty } from '@ember/utils';
+import { computed, observer } from '@ember/object';
+import Component from '@ember/component';
 import layout from '../templates/components/mapbox-marker';
 import { MARKER_EVENTS } from '../constants/events';
 
-export default Ember.Component.extend({
+export default Component.extend({
   classNameBindings: ['isLoaded'],
   layout: layout,
   symbol: '',
@@ -10,13 +13,13 @@ export default Ember.Component.extend({
   marker: null,
   draggable: false,
 
-  isLoaded: Ember.computed('map', 'marker', function() {
+  isLoaded: computed('map', 'marker', function() {
     let map = this.get('map');
     let marker = this.get('marker');
     let cluster = this.get('cluster');
 
-    if (!Ember.isEmpty(map) && !Ember.isEmpty(marker)) {
-      if (!Ember.isEmpty(cluster)) {
+    if (!isEmpty(map) && !isEmpty(marker)) {
+      if (!isEmpty(cluster)) {
         cluster.addLayer(marker);
       } else {
         marker.addTo(map);
@@ -27,7 +30,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  iconChange: Ember.observer('color', 'size', 'symbol', function() {
+  iconChange: observer('color', 'size', 'symbol', function() {
     let map = this.get('map');
     let marker = this.get('marker');
     if (typeof map !== 'undefined' && marker != null) {
@@ -39,7 +42,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  setup: Ember.on('init', function() {
+  setup: on('init', function() {
     let marker = L.marker(this.get('coordinates'), {
       icon: L.mapbox.marker.icon({
         'marker-color': this.get('color'),
@@ -57,7 +60,7 @@ export default Ember.Component.extend({
     this.set('marker', marker);
   }),
 
-  teardown: Ember.on('willDestroyElement', function() {
+  teardown: on('willDestroyElement', function() {
     let marker = this.get('marker');
     let map = this.get('map');
     if (map && marker) {
@@ -65,7 +68,7 @@ export default Ember.Component.extend({
     }
   }),
 
-  popup: Ember.on('didRender', function() {
+  popup: on('didRender', function() {
     if (this.get('is-open')) {
       this.get('marker').openPopup();
       if (this.get('recenter')) {
